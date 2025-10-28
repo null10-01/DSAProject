@@ -6,11 +6,9 @@ if(empty($_SESSION['user_id']) || !$_SESSION['is_admin'])
     exit;
 }
 
-// fetch flights and bookings
 $flights_res = $mysqli->query("SELECT * FROM flights ORDER BY flight_date ASC");
 $all_flights = $flights_res ? $flights_res->fetch_all(MYSQLI_ASSOC) : [];
 
-// Sort flights
 $domestic_flights = [];
 $international_flights = [];
 foreach ($all_flights as $f) {
@@ -22,7 +20,6 @@ foreach ($all_flights as $f) {
 }
 $bookings = $mysqli->query("SELECT b.*, u.name, f.flight_code FROM bookings b JOIN users u ON b.user_id=u.id JOIN flights f ON b.flight_id=f.id ORDER BY b.created_at DESC");
 
-// summary numbers
 $total_flights = count($all_flights);
 $total_bookings = $bookings ? $bookings->num_rows : 0;
 $total_users = $mysqli->query("SELECT COUNT(*) as count FROM users WHERE is_admin = 0")->fetch_assoc()['count'];
